@@ -1,2 +1,4 @@
 # Open-Combined-Export-File
-This code opens the combined export file and prints only the sleep data. Note that the csv file name has been changed. 
+This code opens the combined export file and prints only the sleep data without the headers.
+# Open-Watch-File
+Still to come. The code will open only the raw data from the watch export files. 
