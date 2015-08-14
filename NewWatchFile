@@ -1,29 +1,35 @@
 #set up imports
 import pandas as pd
 import numpy as np
-import glob
 import os
-import fnmatch
 
 
-#path to files
+#path to raw files
 path=r'C:\Users\Isabelle\Python\Individual_Watch_Exports'
 
 
-list_=[]
-#name columns
+list_=[] #list of files that will be concatenated
+#name columns (headers)
 my_columns=["Line","Date","Time","Off-Wrist Status","Activity","Marker","White Light","Red Light","Green Light","Blue Light","Sleep/Wake","Interval Status"]
 
-
+#os.listdir takes a list of the files in the directory (which in this case is the path to the files)
 for filename in os.listdir(path):
-	subject_id=filename.split("_")[1]
-	if ('Subject_'+ subject_id) in filename:
-		#read csv
-		df=pd.read_csv(path,filename, names = my_columns, encoding='utf-8')
-		#covert to dataframe. slice the dataframe 
+	subject_id=filename.split("_")[1] #define subject_id. split the file name based on underscores, and take the character in position 1
+	if ('Subject_'+ subject_id) in filename: #find the files
+		df=pd.read_csv(path,filename, names = my_columns, encoding='utf-8') #read csv
+		#covert the csv to dataframe and slice the dataframe 
 		df2=pd.DataFrame(df[(df["Interval Status"]=="ACTIVE")|(df["Interval Status"]=="REST")|(df["Interval Status"]=="REST-S")|(df["Interval Status"]=="EXCLUDED")])
-		list_.append(df2)
+		list_.append(df2) #add the files to the list of files to be concatenated
 		break
-	frame = pd.concat(list_)
-	print (frame)
-	frame.to_csv("Merged_Subject_"+ subject_id +".csv")
+	frame = pd.concat(list_) #concatenate the files
+	print (frame) #print the data into the console
+	frame.to_csv("Merged_Subject_"+ subject_id +".csv") #put the merged data into a csv
+
+
+
+#notes from dave:
+#pass 2 split string that you want to slpit by
+#split by underscore
+#take position 1= subject id
+#int conversion
+#detect all pf one subj and then index and convert by to list
