@@ -12,4 +12,7 @@ my_columns=["Line","Date","Time","Off-Wrist Status","Activity","Marker","White L
 file= pd.read_csv("Subject_01_04_03_2015_9_00_00_AM_New_Analysis.csv", names=my_columns)
 
 #print the csv
-print (file[file["Interval Status"]=="ACTIVE"])
+print (file[(file["Interval Status"]=="ACTIVE")|(file["Interval Status"]=="REST")|(file["Interval Status"]=="REST-S")|(file["Interval Status"]=="EXCLUDED")])
+
+df = pd.DataFrame(file[(file["Interval Status"]=="ACTIVE")|(file["Interval Status"]=="REST")|(file["Interval Status"]=="REST-S")|(file["Interval Status"]=="EXCLUDED")])
+df.to_csv("New_Watch_File.csv")
