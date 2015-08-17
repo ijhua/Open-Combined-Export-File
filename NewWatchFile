@@ -22,7 +22,7 @@ for filename in os.listdir(path):
 		list_.append(df2) #add the files to the list of files to be concatenated
 		
 	frame = pd.concat(list_) #concatenate the files
-	print (frame) #print the data into the console
+	#print (frame) #print the data into the console
 	frame.to_csv('C:\\Users\\Isabelle\\Python\\Merged_watch\\'+'Merged_Subject_'+ subject_id +".csv") #put the merged data into a csv in the folder Merged_Watch
 
 
