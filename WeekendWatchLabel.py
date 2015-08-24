@@ -42,6 +42,7 @@ for subject in files:
 	#define values for the weekend column. Everything has to be in the one line or else it doesn't work.
 	# weekend=1, weekday=0. weekend starts at 5 pm on Friday and goes until 5 pm on Sunday (noninclusive)
 	final['weekend'] = np.where((((final.index.weekday==4)&(final.index.time>datetime.time(17))))
+		|((final.index.weekday==5))
 		|(((final.index.weekday==6)&(final.index.time<datetime.time(17)))),1,0)
 	files[subject] = final
 	final.to_csv('C:\\Users\\Isabelle\\Python\\Merged_watch\\Merged_Subject_' + subject +"_Weekdayend"+".csv")
