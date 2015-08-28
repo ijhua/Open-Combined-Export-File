@@ -64,7 +64,7 @@ endtime = pd.DatetimeIndex(endtime)
 newend = (endtime.hour*3600)+(endtime.minute*60)+(endtime.second)
 #Correct for AM
 newend[newend>=43200] -=0 
-newend[newend<43200] += 86400
+newend[newend<43200] += 0
 rdf["End Time"]=newend
 
 #put rdf to dictionaries
