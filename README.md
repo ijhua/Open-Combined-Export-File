@@ -4,7 +4,7 @@ This code opens the combined export file and prints only the sleep data without 
 ##CombinedExportFilePandas
 Basically the same as the OpenCombinedExportFile, but this one uses pandas and prints only the sleep data with headers into a new csv ("New_Export_File"). 
 ##SummaryCalculations
-Calculates average and standard deviation of onset, offset, and duration for weekends and weekdays from the raw data in the CombinedExportFilePandas. Also calculates social jetlag from calculated midsleep on freedays and workdays. Prints calculated data to a new csv. Format of time is in hours, not H:MM:SS. 
+Calculates average and standard deviation of onset, offset, duration, and efficiency for weekends and weekdays from the raw data in the CombinedExportFilePandas. Also calculates social jetlag from calculated midsleep on freedays and workdays. Prints calculated data to a new csv. Format of time is in hours, not H:MM:SS. 
 The code uses dictionaries, which are inherently unordered in python, but the supposed disorder is not unorderly. The order that the subjects (keys) are printed may change, but the data associated with them does not. I.e. data from subject 1 is always with subject 1, even if subject 1 is not at the top of the list. 
 
 #Files that deal with the raw data:
