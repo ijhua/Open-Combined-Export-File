@@ -1,3 +1,8 @@
+
+# coding: utf-8
+
+# In[ ]:
+
 '''
 key (for later):
 a=average/mean
@@ -18,6 +23,9 @@ steps in this code:
 
 '''
 
+
+# In[309]:
+
 #set up imports
 import pandas as pd
 import numpy as np
@@ -25,7 +33,9 @@ import os
 import datetime
 import time
 
-#Open Raw Data Files
+
+# In[310]:
+
 path=r'C:\Users\Isabelle\Python\Summary_Data'
 file_name="New_Export_File.csv"
 my_columns=["Subject ID","Data Start Date","Data Start Time",
@@ -38,6 +48,9 @@ my_columns=["Subject ID","Data Start Date","Data Start Time",
 	"TALT Green","%Invalid Green","Exposure Blue","Avg Blue",
 	"Max Blue","TALT Blue","%Invalid Blue"]
 
+
+# In[311]:
+
 #read the file into csv
 file=(pd.read_csv(path+"\\"+file_name, usecols=my_columns, engine='python', parse_dates=True))
 #print(file[file["Interval Type"]=="SLEEP"]) #print the csv into the console
@@ -45,9 +58,12 @@ file=(pd.read_csv(path+"\\"+file_name, usecols=my_columns, engine='python', pars
 #put into DataFrame
 df = pd.DataFrame(file)
 
+
+# In[312]:
+
 #create new raw dataframe
 rdf=pd.DataFrame(df)
-rdf=rdf.loc[:,["Subject ID", "weekend", "Start Date","Start Time","End Date","End Time","Duration"]]
+rdf=rdf.loc[:,["Subject ID", "weekend", "Start Date","Start Time","End Date","End Time","Duration","Efficiency"]]
 #change starttime to datetime. 
 starttime = pd.to_datetime(rdf.iloc[:,3], infer_datetime_format=True)
 starttime = pd.DatetimeIndex(starttime)
@@ -65,6 +81,9 @@ newend = (endtime.hour*3600)+(endtime.minute*60)+(endtime.second)
 #Correct for AM/PM
 newend +=43200
 rdf["End Time"]=newend
+
+
+# In[313]:
 
 #put rdf to dictionaries
 #weekday
@@ -95,6 +114,15 @@ for x in range(len(rdf)):
     else:
         continue
     wdduration[subjectid].append(value3)
+wdefficiency={}
+for x in range(len(rdf)):
+    subjectid = rdf.iloc[x,0]
+    wdefficiency.setdefault(subjectid, [])
+    if rdf.iloc[x,1]==0:
+        value7 = (rdf.iloc[x,7])
+    else:
+        continue
+    wdefficiency[subjectid].append(value7)
 #weekend
 weonset={}
 for x in range(len(rdf)):
@@ -123,18 +151,35 @@ for x in range(len(rdf)):
     else:
         continue
     weduration[subjectid].append(value6)
+weefficiency={}
+for x in range(len(rdf)):
+    subjectid = rdf.iloc[x,0]
+    weefficiency.setdefault(subjectid, [])
+    if rdf.iloc[x,1]==1:
+        value8 = (rdf.iloc[x,7])
+    else:
+        continue
+    weefficiency[subjectid].append(value8)
 
+
+# In[314]:
 
 #create new DataFrame
 new_col=["Subject ID","Average Weekday Onset", "Std Weekday Onset","Average Weekday Offset", "Std Weekday Offset",
          "Average Weekend Onset", "Std Weekend Onset","Average Weekend Offset", "Std Weekend Offset",
         "Average Weekday Duration", "Std Weekday Duration","Average Weekend Duration", "Std Weekend Duration",
-        "MS Free", "MS Work", "Social Jetlag"]
+         "Average Weekday Efficiency", "Average Weekend Efficiency", "Std Weekday Efficiency", "Std Weekend Efficiency",
+         "MS Free", "MS Work", "Social Jetlag"]
 sdf=pd.DataFrame(columns=new_col)
 
 
-#set subject ID
-sdf["Subject ID"]=wdonset.keys()
+# In[316]:
+
+#set subject ID of new dataframe
+sdf["Subject ID"]=weonset.keys()
+
+
+# In[317]:
 
 #Duration, in hours
 #Averages
@@ -154,6 +199,9 @@ sdf["Std Weekday Duration"]=(stdwddur.std(axis=1)/60)
 stdwddur=pd.DataFrame(list(weduration.values()))
 sdf["Std Weekend Duration"]=(stdwddur.std(axis=1)/60)
 
+
+# In[318]:
+
 #Weekday Onset
 #Average
 rwdonset=pd.DataFrame(list(wdonset.values()))
@@ -162,6 +210,9 @@ sdf["Average Weekday Onset"]=(awdonset)
 #standard deviation in hours.
 stdwdonset=pd.DataFrame((rwdonset.std(axis=1))/3600)
 sdf["Std Weekday Onset"]=(stdwdonset)
+
+
+# In[319]:
 
 #Weekday offset
 #Average
@@ -172,27 +223,56 @@ sdf["Average Weekday Offset"]=(awdoffset)
 stdwdoffset=pd.DataFrame((rwdoffset.std(axis=1))/3600)
 sdf["Std Weekday Offset"]=(stdwdoffset)
 
+
+# In[320]:
+
 #Weekend Onset
 #Average
 rweonset=pd.DataFrame(list(weonset.values()))
-#aweonset=pd.to_datetime(rweonset.mean(axis=1),unit='s')
-#aweonset=pd.DatetimeIndex(aweonset)
 aweonset=pd.DataFrame(rweonset.mean(axis=1)/3600-24)
 sdf["Average Weekend Onset"]=(aweonset)
 #standard deviation in hours.
 stdweonset=pd.DataFrame((rweonset.std(axis=1))/3600)
 sdf["Std Weekend Onset"]=(stdweonset)
 
+
+# In[321]:
+
 #Weekend Offset
 #average
 rweoffset=pd.DataFrame(list(weoffset.values()))
-#aweoffset=pd.to_datetime(rweoffset.mean(axis=1),unit='s')
-#aweoffset=pd.DatetimeIndex(aweoffset)
 aweoffset=pd.DataFrame(rweoffset.mean(axis=1)/3600)
 sdf["Average Weekend Offset"]=(aweoffset)
 #standard deviation in hours.
 stdweoffset=pd.DataFrame((rweoffset.std(axis=1))/3600)
 sdf["Std Weekend Offset"]=(stdweoffset)
+
+
+# In[322]:
+
+#Weekday Efficiency
+#Average
+rwdeff=pd.DataFrame(list(wdefficiency.values()))
+awdeff=pd.DataFrame(rwdeff.mean(axis=1))
+sdf["Average Weekday Efficiency"]=awdeff
+#standard deviation
+stdwdeff=pd.DataFrame(rwdeff.std(axis=1))
+sdf["Std Weekday Efficiency"]=stdwdeff
+
+
+# In[323]:
+
+#Weekend Efficiency
+#average
+rweeff=pd.DataFrame(list(weefficiency.values()))
+aweeff=pd.DataFrame(rweeff.mean(axis=1))
+sdf["Average Weekend Efficiency"]=aweeff
+#standard deviation
+stdweeff=pd.DataFrame(rweeff.std(axis=1))
+sdf["Std Weekend Efficiency"]=stdweeff
+
+
+# In[324]:
 
 #Social Jetlag
 #find midsleep on workdays
@@ -205,5 +285,9 @@ sdf["MS Free"]=msfree
 social_jetlag=(msfree-mswork)
 sdf["Social Jetlag"]=social_jetlag
 
-#save to csv
+
+# In[325]:
+
 sdf.to_csv("Summary_Calculations.csv")
+
+
