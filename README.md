@@ -2,7 +2,9 @@ Files that deal with the _summary_ data:
 # OpenCombinedExportFile
 This code opens the combined export file and prints only the sleep data without the headers. Then, it saves the new data table as a csv. 
 #CombinedExportFilePandas
-Basically the same as the OpenCombinedExportFile, but this one uses pandas and prints only the sleep data with headers. 
+Basically the same as the OpenCombinedExportFile, but this one uses pandas and prints only the sleep data with headers into a new csv ("New_Export_File"). 
+#SummaryCalculations
+Calculates average and standard deviation of onset, offset, and duration for weekends and weekdays from the raw data in the CombinedExportFilePandas and prints a new csv. 
 
 Files that deal with the _raw_ data:
 # OpenWatchFilePandas
