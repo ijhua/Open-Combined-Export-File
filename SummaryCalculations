@@ -1,18 +1,8 @@
 
 # coding: utf-8
-
-# In[ ]:
-
 '''
-key (for later):
-a=average/mean
-std=standard deviation. Return unbiased standard deviation over requested axis. 
-	Normalized by N-1 by default. This can be changed using the ddof argument
-wd=weekday
-we=weekend
-
 steps in this code:
-1. Open raw data file as DataFrame(df).
+1. Open raw data file as DataFrame(df) from New_Export_File.
 2. Create new data frame (rdf) that takes out the wanted data from the raw file.
 3. Manipulate the data a little:
 	Add 24 hours to times that are in the AM section of time to make averaging easier, but only for the onset data
@@ -21,10 +11,15 @@ steps in this code:
 6. Calculate the averages and standard deviations for each of the variables. 
 7. Move the sdf to a csv. 
 
+key (for later):
+a=average/mean
+std=standard deviation. Return unbiased standard deviation over requested axis. 
+    Normalized by N-1 by default. This can be changed using the ddof argument
+wd=weekday
+we=weekend
 '''
 
 
-# In[309]:
 
 #set up imports
 import pandas as pd
@@ -34,10 +29,9 @@ import datetime
 import time
 
 
-# In[310]:
 
 path=r'C:\Users\Isabelle\Python\Summary_Data'
-file_name="New_Export_File.csv"
+file_name="New_Export_File2.csv"
 my_columns=["Subject ID","Data Start Date","Data Start Time",
 	"Interval Type","weekend","Interval#","Start Date","Start Time",
 	"End Date","End Time","Duration","Off-Wrist","%Off-Wrist",
@@ -49,17 +43,17 @@ my_columns=["Subject ID","Data Start Date","Data Start Time",
 	"Max Blue","TALT Blue","%Invalid Blue"]
 
 
-# In[311]:
+
 
 #read the file into csv
 file=(pd.read_csv(path+"\\"+file_name, usecols=my_columns, engine='python', parse_dates=True))
 #print(file[file["Interval Type"]=="SLEEP"]) #print the csv into the console
 
+
 #put into DataFrame
 df = pd.DataFrame(file)
 
 
-# In[312]:
 
 #create new raw dataframe
 rdf=pd.DataFrame(df)
@@ -83,7 +77,7 @@ newend +=43200
 rdf["End Time"]=newend
 
 
-# In[313]:
+
 
 #put rdf to dictionaries
 #weekday
@@ -162,7 +156,7 @@ for x in range(len(rdf)):
     weefficiency[subjectid].append(value8)
 
 
-# In[314]:
+
 
 #create new DataFrame
 new_col=["Subject ID","Average Weekday Onset", "Std Weekday Onset","Average Weekday Offset", "Std Weekday Offset",
@@ -173,23 +167,23 @@ new_col=["Subject ID","Average Weekday Onset", "Std Weekday Onset","Average Week
 sdf=pd.DataFrame(columns=new_col)
 
 
-# In[316]:
+
 
 #set subject ID of new dataframe
 sdf["Subject ID"]=weonset.keys()
 
 
-# In[317]:
+
 
 #Duration, in hours
 #Averages
 #Average Weekday Duration
 awddur=pd.DataFrame(list(wdduration.values()))
-awddur=(awddur.mean(axis=1)/60)
+awddur=pd.DataFrame(awddur.mean(axis=1)/60)
 sdf["Average Weekday Duration"]=awddur
 #Average Weekend Duration
 awedur=pd.DataFrame(list(weduration.values()))
-awedur=(awedur.mean(axis=1)/60)
+awedur=pd.DataFrame(awedur.mean(axis=1)/60)
 sdf["Average Weekend Duration"]=awedur
 #Standard Deviations
 #Std Weekday Duration
@@ -200,7 +194,7 @@ stdwddur=pd.DataFrame(list(weduration.values()))
 sdf["Std Weekend Duration"]=(stdwddur.std(axis=1)/60)
 
 
-# In[318]:
+
 
 #Weekday Onset
 #Average
@@ -212,7 +206,7 @@ stdwdonset=pd.DataFrame((rwdonset.std(axis=1))/3600)
 sdf["Std Weekday Onset"]=(stdwdonset)
 
 
-# In[319]:
+
 
 #Weekday offset
 #Average
@@ -224,7 +218,7 @@ stdwdoffset=pd.DataFrame((rwdoffset.std(axis=1))/3600)
 sdf["Std Weekday Offset"]=(stdwdoffset)
 
 
-# In[320]:
+
 
 #Weekend Onset
 #Average
@@ -236,7 +230,7 @@ stdweonset=pd.DataFrame((rweonset.std(axis=1))/3600)
 sdf["Std Weekend Onset"]=(stdweonset)
 
 
-# In[321]:
+
 
 #Weekend Offset
 #average
@@ -248,7 +242,7 @@ stdweoffset=pd.DataFrame((rweoffset.std(axis=1))/3600)
 sdf["Std Weekend Offset"]=(stdweoffset)
 
 
-# In[322]:
+
 
 #Weekday Efficiency
 #Average
@@ -260,7 +254,7 @@ stdwdeff=pd.DataFrame(rwdeff.std(axis=1))
 sdf["Std Weekday Efficiency"]=stdwdeff
 
 
-# In[323]:
+
 
 #Weekend Efficiency
 #average
@@ -272,7 +266,7 @@ stdweeff=pd.DataFrame(rweeff.std(axis=1))
 sdf["Std Weekend Efficiency"]=stdweeff
 
 
-# In[324]:
+
 
 #Social Jetlag
 #find midsleep on workdays
@@ -286,8 +280,10 @@ social_jetlag=(msfree-mswork)
 sdf["Social Jetlag"]=social_jetlag
 
 
-# In[325]:
 
-sdf.to_csv("Summary_Calculations.csv")
 
+sdf.to_csv(path+"\\Summary_Calculations2.csv")
+
+
+# In[ ]:
 
